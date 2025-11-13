@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 from pathlib import Path
-from git import Repo
 
 from kosong.chat_provider import APIStatusError, ChatProviderError
 from kosong.message import ContentPart
@@ -95,7 +94,7 @@ class ShellApp:
                 if os.path.isdir(project_root / ".git"):
                     try:
                         await asyncio.create_subprocess_shell("git add -A", cwd = os.fspath(project_root))
-                        await asyncio.create_subprocess_shell("git commit -q", cwd = os.fspath(project_root))
+                        await asyncio.create_subprocess_shell("git commit update -q", cwd = os.fspath(project_root))
                     except Exception as e:
                         logger.exception("Failed to commit changes:")
                         console.print(f"[red]Failed to commit changes: {e}[/red]")
