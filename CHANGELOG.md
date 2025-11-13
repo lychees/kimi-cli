@@ -9,7 +9,7 @@ Internal builds may append content to the Unreleased section.
 Only write entries that are worth mentioning to users.
 -->
 
-## [Unreleased]
+## [0.53] - 2025-11-12
 
 - UI: Remove unnecessary trailing spaces in console output
 - Core: Throw error when there are unsupported message parts
@@ -17,6 +17,7 @@ Only write entries that are worth mentioning to users.
 - Tool: Add approval request for MCP tools
 - Tool: Disable `Think` tool in default agent
 - CLI: Restore thinking mode from last time when `--thinking` is not specified
+- CLI: Fix `/reload` not working in binary packed by PyInstaller
 
 ## [0.52] - 2025-11-10
 
