@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import asyncio
+import os
 from collections.abc import Awaitable, Coroutine
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
+from pathlib import Path
+from git import Repo
 
 from kosong.chat_provider import APIStatusError, ChatProviderError
 from kosong.message import ContentPart
@@ -88,9 +91,17 @@ class ShellApp:
                     thinking="on" if user_input.thinking else "off",
                 )
                 await self._run_soul_command(user_input.content, user_input.thinking)
-
+                project_root = Path(__file__).parent.parent.parent.parent.parent
+                if os.path.isdir(project_root / ".git"):
+                    try:
+                        await asyncio.create_subprocess_shell("git add -A", cwd = os.fspath(project_root))
+                        await asyncio.create_subprocess_shell("git commit -q", cwd = os.fspath(project_root))
+                    except Exception as e:
+                        logger.exception("Failed to commit changes:")
+                        console.print(f"[red]Failed to commit changes: {e}[/red]")
+            
         return True
-
+    
     async def _run_shell_command(self, command: str) -> None:
         """Run a shell command in foreground."""
         if not command.strip():
