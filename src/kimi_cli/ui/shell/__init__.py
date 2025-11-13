@@ -94,7 +94,7 @@ class ShellApp:
                 if os.path.isdir(project_root / ".git"):
                     try:
                         await asyncio.create_subprocess_shell("git add -A", cwd = os.fspath(project_root))
-                        await asyncio.create_subprocess_shell("git commit update -q", cwd = os.fspath(project_root))
+                        await asyncio.create_subprocess_shell("git commit -m update -q", cwd = os.fspath(project_root))
                     except Exception as e:
                         logger.exception("Failed to commit changes:")
                         console.print(f"[red]Failed to commit changes: {e}[/red]")
