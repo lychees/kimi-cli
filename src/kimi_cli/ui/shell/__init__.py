@@ -90,17 +90,18 @@ class ShellApp:
                     thinking="on" if user_input.thinking else "off",
                 )
                 await self._run_soul_command(user_input.content, user_input.thinking)
-                project_root = Path(__file__).parent.parent.parent.parent.parent
-                if os.path.isdir(project_root / ".git"):
-                    try:
-                        console.print("Auto commit changes...")
-                        add = await asyncio.create_subprocess_shell("git add -A", cwd = os.fspath(project_root))
-                        await add.wait()
-                        commit = await asyncio.create_subprocess_shell("git commit -m update -q", cwd = os.fspath(project_root))
-                        await commit.wait()
-                    except Exception as e:
-                        logger.exception("Failed to commit changes:")
-                        console.print(f"[red]Failed to commit changes: {e}[/red]")
+                if isinstance(self.soul, KimiSoul):
+                    work_dir = self.soul._runtime.session.work_dir
+                    if os.path.isdir(work_dir / ".git"):
+                        try:
+                            console.print(f"Auto commit changes at {os.fspath(work_dir)}")
+                            add = await asyncio.create_subprocess_shell("git add -A")
+                            await add.wait()
+                            commit = await asyncio.create_subprocess_shell("git commit -m update -q")
+                            await commit.wait()
+                        except Exception as e:
+                            logger.exception("Failed to commit changes:")
+                            console.print(f"[red]Failed to commit changes: {e}[/red]")
             
         return True
     
